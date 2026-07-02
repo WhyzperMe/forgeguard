@@ -4,19 +4,6 @@
 
 ForgeGuard is pre-1.0. Security fixes are applied to the current `main` branch.
 
-## Reporting Vulnerabilities
-
-Do not open public issues for vulnerabilities in ForgeGuard itself. Report them
-privately through the repository owner's preferred private channel.
-
-Include:
-
-- affected ForgeGuard commit or version;
-- operating system and Rust version;
-- minimal static fixture or reproduction steps;
-- expected and observed behavior;
-- whether secrets, paths, or advisory data were exposed.
-
 ## Scanner Safety Guarantees
 
 ForgeGuard scanners are static. They do not execute:
