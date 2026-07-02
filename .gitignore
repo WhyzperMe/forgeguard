@@ -1,0 +1,48 @@
+﻿# Rust
+/target/
+target/
+
+# Generated scanner reports
+*.sarif
+forgeguard.sarif
+*.jsonl
+reports/
+report/
+.scanner-output/
+
+# Node / frontend artifacts
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+.next/
+.nuxt/
+.svelte-kit/
+.turbo/
+
+# Secrets / environment
+.env
+.env.*
+!.env.example
+secrets.json
+secret.json
+credentials.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temp files
+*.tmp
+*.temp
+*.bak

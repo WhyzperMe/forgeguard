@@ -1,0 +1,4 @@
+Add this dependency to crates/forgeguard-cli/Cargo.toml:
+
+[dependencies]
+forgeguard-scanner = { path = "../forgeguard-scanner" }

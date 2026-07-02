@@ -1,0 +1,38 @@
+[package]
+name = "forgeguard"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "forgeguard"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+forgeguard-cargo = { path = "../forgeguard-cargo" }
+forgeguard-core = { path = "../forgeguard-core" }
+forgeguard-npm = { path = "../forgeguard-npm" }
+forgeguard-osv = { path = "../forgeguard-osv" }
+forgeguard-policy = { path = "../forgeguard-policy" }
+forgeguard-report = { path = "../forgeguard-report" }
+forgeguard-scanner = { path = "../forgeguard-scanner" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[dev-dependencies]
+semver.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

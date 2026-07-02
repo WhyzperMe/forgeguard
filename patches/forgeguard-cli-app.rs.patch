@@ -1,0 +1,52 @@
+--- a/crates/forgeguard-cli/src/app.rs
++++ b/crates/forgeguard-cli/src/app.rs
+@@
+-use forgeguard_cargo::{CargoScanner, is_crates_io_package, scan_path};
++use forgeguard_cargo::{CargoScanner, is_crates_io_package, scan_path};
+ use forgeguard_core::{
+@@
+ };
++use forgeguard_npm::{NpmScanner, is_npm_registry_package};
+@@
+ fn default_scanner_registry() -> ScannerRegistry {
+-    ScannerRegistry::new().with_scanner(CargoScanner::new())
++    ScannerRegistry::new()
++        .with_scanner(CargoScanner::new())
++        .with_scanner(NpmScanner::new())
+ }
+@@
+-    let query_packages = crates_io_packages(&scan_output);
++    let query_packages = advisory_query_packages(&scan_output);
+@@
+-        limitations.push("No public crates.io packages were eligible for OSV queries.".to_owned());
++        limitations.push("No public registry packages were eligible for OSV queries.".to_owned());
+         return Ok(Vec::new());
+     }
+@@
+-fn crates_io_packages(scan_output: &ScannerOutput) -> Vec<forgeguard_core::Package> {
++fn advisory_query_packages(scan_output: &ScannerOutput) -> Vec<forgeguard_core::Package> {
+     scan_output
+         .graph
+         .packages
+         .iter()
+-        .filter(|package| is_crates_io_package(package))
++        .filter(|package| match package.id.ecosystem {
++            Ecosystem::Cargo => is_crates_io_package(package),
++            Ecosystem::Npm => is_npm_registry_package(package),
++            _ => false,
++        })
+         .cloned()
+         .collect()
+ }
+@@
+-                "{local_or_non_registry} local/path or non-crates.io package(s) were excluded from OSV queries."
++                "{local_or_non_registry} local/path or non-public-registry package(s) were excluded from OSV queries."
+             ));
+         }
+     }
+@@
+     fn default_registry_contains_cargo_scanner() {
+         let registry = default_scanner_registry();
+-        assert_eq!(registry.scanner_names(), vec!["cargo"]);
++        assert_eq!(registry.scanner_names(), vec!["cargo", "npm"]);
+     }

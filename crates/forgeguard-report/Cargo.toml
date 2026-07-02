@@ -1,0 +1,22 @@
+[package]
+name = "forgeguard-report"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+comfy-table.workspace = true
+forgeguard-core = { path = "../forgeguard-core" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+semver.workspace = true
+
+[lints]
+workspace = true

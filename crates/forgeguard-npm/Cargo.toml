@@ -1,0 +1,25 @@
+[package]
+name = "forgeguard-npm"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+forgeguard-core = { path = "../forgeguard-core" }
+forgeguard-scanner = { path = "../forgeguard-scanner" }
+semver.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml_ng.workspace = true
+thiserror.workspace = true
+urlencoding.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

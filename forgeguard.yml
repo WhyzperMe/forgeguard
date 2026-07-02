@@ -1,0 +1,21 @@
+# ForgeGuard policy file.
+#
+# This default policy is intentionally conservative for CI/CD demonstrations:
+# - fail on high or critical findings
+# - always fail on known-exploited signals
+# - do not fail solely because a fix is available
+#
+# Temporary suppressions require a human reason and an expiry date. Expired
+# allowlist entries are ignored by the policy evaluator.
+
+fail_on:
+  severity: high
+  known_exploited: true
+  fix_available: false
+
+allowlist: []
+
+licenses:
+  deny:
+    - AGPL-3.0
+    - GPL-3.0

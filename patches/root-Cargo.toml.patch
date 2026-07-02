@@ -1,0 +1,13 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@
+ members = [
+     "crates/forgeguard-core",
++    "crates/forgeguard-scanner",
+     "crates/forgeguard-cargo",
++    "crates/forgeguard-npm",
+     "crates/forgeguard-osv",
+     "crates/forgeguard-policy",
+     "crates/forgeguard-report",
+     "crates/forgeguard-cli",
+ ]

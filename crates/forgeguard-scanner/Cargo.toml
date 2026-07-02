@@ -1,0 +1,20 @@
+[package]
+name = "forgeguard-scanner"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+forgeguard-core = { path = "../forgeguard-core" }
+thiserror.workspace = true
+
+[dev-dependencies]
+semver.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

@@ -1,0 +1,10 @@
+--- a/crates/forgeguard-cli/Cargo.toml
++++ b/crates/forgeguard-cli/Cargo.toml
+@@
+ forgeguard-cargo = { path = "../forgeguard-cargo" }
+ forgeguard-core = { path = "../forgeguard-core" }
++forgeguard-scanner = { path = "../forgeguard-scanner" }
++forgeguard-npm = { path = "../forgeguard-npm" }
+ forgeguard-osv = { path = "../forgeguard-osv" }
+ forgeguard-policy = { path = "../forgeguard-policy" }
+ forgeguard-report = { path = "../forgeguard-report" }

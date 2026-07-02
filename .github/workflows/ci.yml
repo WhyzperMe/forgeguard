@@ -1,0 +1,159 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: short
+
+jobs:
+  quality:
+    name: Rust quality gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install stable Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+          rustup default stable
+          rustc --version
+          cargo --version
+
+      - name: Cache Cargo registry, git index, and build output
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+
+      - name: Verify formatting
+        run: cargo fmt --all -- --check
+
+      - name: Check workspace
+        run: cargo check --workspace --locked
+
+      - name: Run Clippy with denied warnings
+        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+
+      - name: Run tests
+        run: cargo test --workspace --all-features --locked
+
+      - name: Build documentation
+        env:
+          RUSTDOCFLAGS: -D warnings
+        run: cargo doc --workspace --no-deps --locked
+
+      - name: Build workspace
+        run: cargo build --workspace --all-features --locked
+
+      - name: Run deterministic offline self-scan
+        run: |
+          mkdir -p target/forgeguard-ci
+          cargo run -p forgeguard --locked -- scan . --offline --format json --output target/forgeguard-ci/offline-report.json
+          cargo run -p forgeguard --locked -- sbom . --format cyclonedx --output target/forgeguard-ci/bom.cdx.json
+
+      - name: Upload CI reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: forgeguard-ci-reports
+          path: target/forgeguard-ci/
+          if-no-files-found: error
+          retention-days: 14
+
+  supply-chain-audit:
+    name: Dependency audit and policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install stable Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - name: Cache Cargo registry, git index, and build output
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-audit-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-audit-${{ runner.os }}-
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Audit Rust dependencies
+        run: cargo audit
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+
+      - name: Check dependency policy
+        run: cargo deny check
+
+  sarif-smoke-test:
+    name: SARIF smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install stable Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - name: Generate deterministic ForgeGuard SARIF
+        run: |
+          mkdir -p target/forgeguard-ci
+          cargo run -p forgeguard --locked -- scan . --offline --format sarif --output target/forgeguard-ci/forgeguard.sarif
+
+      - name: Upload SARIF to GitHub code scanning
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: target/forgeguard-ci/forgeguard.sarif
+          category: forgeguard-offline

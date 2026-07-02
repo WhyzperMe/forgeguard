@@ -1,0 +1,26 @@
+[package]
+name = "forgeguard-cargo"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+cargo-lock.workspace = true
+forgeguard-core = { path = "../forgeguard-core" }
+forgeguard-scanner = { path = "../forgeguard-scanner" }
+semver.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+toml.workspace = true
+tracing.workspace = true
+urlencoding.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

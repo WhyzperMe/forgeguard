@@ -1,0 +1,23 @@
+[package]
+name = "forgeguard-policy"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+forgeguard-core = { path = "../forgeguard-core" }
+serde.workspace = true
+serde_yaml_ng.workspace = true
+thiserror.workspace = true
+time.workspace = true
+
+[dev-dependencies]
+semver.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true
