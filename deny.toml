@@ -18,7 +18,7 @@ allow = [
     "MPL-2.0",
     "Unicode-3.0",
     "Zlib",
-    "MPL-2.0 OR MIT OR Apache-2.0",  # Add if webpki-root-certs uses a dual/multi-license
+    "Zlib OR Apache-2.0",
 ]
 
 [bans]
